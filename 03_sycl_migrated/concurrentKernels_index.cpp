@@ -33,7 +33,7 @@ void sum(clock_t *d_clocks, int N, sycl::nd_item<3> item_ct1, clock_t *s_clocks)
   }
 
   s_clocks[item_ct1.get_local_id(2)] = my_sum;
-   item_ct1.barrier();
+   sycl::nd_item::barrier() 
 
   for (int i = 16; i > 0; i /= 2) {
     if (item_ct1.get_local_id(2) < i) {
@@ -41,7 +41,7 @@ void sum(clock_t *d_clocks, int N, sycl::nd_item<3> item_ct1, clock_t *s_clocks)
           s_clocks[item_ct1.get_local_id(2) + i];
     }
 
-    item_ct1.barrier();
+    sycl::nd_item::barrier() 
   }
 
   d_clocks[0] = s_clocks[0];
