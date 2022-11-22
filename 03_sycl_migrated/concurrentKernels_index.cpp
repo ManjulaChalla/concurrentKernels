@@ -64,6 +64,17 @@ int main(int argc, char **argv) {
     nkernels = getCmdLineArgumentInt(argc, (const char **)argv, "nkernels");
     nstreams = nkernels + 1;
   }
+ auto exception_handler = [](exception_list exceptions) {
+    for (std::exception_ptr const &e : exceptions) {
+      try {
+        std::rethrow_exception(e);
+      } catch (exception const &e) {
+        std::cout << "Caught asynchronous SYCL exception during ASUM:\n"
+                  << e.what() << std::endl;
+      }
+    }
+  };
+
 
   // use command-line specified CUDA device, otherwise use device with highest
   // Gflops/s
@@ -101,7 +112,7 @@ int main(int argc, char **argv) {
   for (int i = 0; i < nstreams; i++) {
      streams[i] = (sycl::queue *)malloc(nstreams * sizeof(sycl::queue));
     *streams[i] =
-        sycl::queue(sycl::default_selector(), property::queue::in_order());
+        sycl::queue(sycl::default_selector(),exception_handler, property::queue::in_order());
   }
 
   // create CUDA event handles
