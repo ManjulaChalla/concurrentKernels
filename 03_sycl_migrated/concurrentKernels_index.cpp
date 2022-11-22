@@ -93,18 +93,12 @@ int main(int argc, char **argv) {
 
   // allocate host memory
   clock_t *a = 0;  // pointer to the array data in host memory
-  /*
-  DPCT1003:6: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
+  
   a = (clock_t *)sycl::malloc_host(nbytes, q_ct1);
 
   // allocate device memory
   clock_t *d_a = 0;  // pointers to data and init value in the device memory
-  /*
-  DPCT1003:7: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
+  
   d_a = (clock_t *)sycl::malloc_device(nbytes, q_ct1);
 
   // allocate and initialize an array of stream handles
@@ -142,11 +136,6 @@ int main(int argc, char **argv) {
       (clock_t)(kernel_time *q_ct1.get_device().get_info<sycl::info::device::max_clock_frequency>());
 #endif
 
-  /*
-  DPCT1012:0: Detected kernel execution time measurement pattern and generated
-  an initial code for time measurements in SYCL. You can change the way time is
-  measured depending on your goals.
-  */
   sycl::event stop_event_streams_nstreams_1;
   start_event_ct1 = std::chrono::steady_clock::now();
   start_event = q_ct1.ext_oneapi_submit_barrier();
@@ -163,16 +152,6 @@ int main(int argc, char **argv) {
           });
     });
     total_clocks += time_clocks;
-    /*
-    DPCT1012:12: Detected kernel execution time measurement pattern and
-    generated an initial code for time measurements in SYCL. You can change the
-    way time is measured depending on your goals.
-    */
-    /*
-    DPCT1024:13: The original code returned the error code that was further
-    consumed by the program logic. This original code was replaced with 0. You
-    may need to rewrite the program logic consuming the error code.
-    */
     kernelEvent_ct1_i = std::chrono::steady_clock::now();
     kernelEvent[i] = streams[i]->ext_oneapi_submit_barrier();
 
@@ -195,35 +174,19 @@ int main(int argc, char **argv) {
           sum(d_a, nkernels, item_ct1, s_clocks_acc_ct1.get_pointer());
         });
   });
-  /*
-  DPCT1003:15: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
+  
   stop_event_streams_nstreams_1 = streams[nstreams - 1]->memcpy(a, d_a, sizeof(clock_t));
 
   // at this point the CPU has dispatched all work for the GPU and can continue
   // processing other tasks in parallel
 
   // in this sample we just wait until the GPU is done
-  /*
-  DPCT1012:16: Detected kernel execution time measurement pattern and generated
-  an initial code for time measurements in SYCL. You can change the way time is
-  measured depending on your goals.
-  */
-  /*
-  DPCT1024:17: The original code returned the error code that was further
-  consumed by the program logic. This original code was replaced with 0. You may
-  need to rewrite the program logic consuming the error code.
-  */
+ 
   q_ct1.wait_and_throw();
   stop_event_streams_nstreams_1.wait();
   stop_event_ct1 = std::chrono::steady_clock::now();
   stop_event = q_ct1.ext_oneapi_submit_barrier();
   
-  /*
-  DPCT1003:18: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
   elapsed_time = std::chrono::duration<float, std::milli>(
                                       stop_event_ct1 - start_event_ct1)
                                       .count();
@@ -244,14 +207,6 @@ int main(int argc, char **argv) {
   free(streams);
   delete[] kernelEvent;
 
-  /*
-  DPCT1026:1: The call to cudaEventDestroy was removed because this call is
-  redundant in SYCL.
-  */
-  /*
-  DPCT1026:2: The call to cudaEventDestroy was removed because this call is
-  redundant in SYCL.
-  */
   sycl::free(a, q_ct1);
   sycl::free(d_a, q_ct1);
 
