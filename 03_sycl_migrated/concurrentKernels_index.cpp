@@ -108,7 +108,7 @@ int main(int argc, char **argv) {
   for (int i = 0; i < nstreams; i++) {
      streams[i] = (sycl::queue *)malloc(nstreams * sizeof(sycl::queue));
     *streams[i] =
-        sycl::queue(sycl::default_selector(),exception_handler, property::queue::in_order());
+        sycl::queue(sycl::default_selector(),exception_handler);
   }
 
   // create CUDA event handles
