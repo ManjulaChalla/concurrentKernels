@@ -1,6 +1,6 @@
 ﻿# `concurrentkernels` Sample
 
-The `HSOpticalFlow` sample is a computation of per-pixel motion estimation between two consecutive image frames caused by movement of object or camera. This sample is implemented using SYCL* by migrating code from original CUDA source code for offloading computations to a GPU/CPU and further demonstrates how to optimize and improve processing time.
+The `concurrentKernels`sample demonstrates the use of SYCL queues for concurrent execution of several kernels on GPU device.It is implemented using SYCL* by migrating code from original CUDA source code for offloading computations to a GPU/CPU and further demonstrates how to optimize and improve processing time.
 
 | Property               | Description
 |:---                    |:---
