@@ -10,8 +10,7 @@ The `concurrentKernels` sample demonstrates the use of SYCL queues for concurren
 >**Note**: This sample is based on the [concurrentKernels](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/0_Introduction/concurrentKernels) sample in the NVIDIA/cuda-samples GitHub repository.
 
 ## Purpose
-
-
+ConcurrentKernels sample show the execution of Multiple Kernels on the device at the same time.
 
 This sample contains three versions in the following folders:
 
@@ -35,6 +34,7 @@ concurrentKernels involves a kernel that does no real work but runs atleast for 
 
 >**Note**: This sample demonstrates the CUDA concurrentKernels using key concepts such as CUDA streams and Performance Strategies.
 
+The choice to create an in-order or out-of-order queue is made at queue construction time through the property sycl::property::queue::in_order(). By default, when no property is specified, the queue is out-of-order.
 
 ## Set Environment Variables
 
@@ -63,7 +63,7 @@ When working with the command-line interface (CLI), you should configure the one
    $ make
    ```
 
-   By default, this command sequence will build the `02_sycl_dpct_migrated`, `03_sycl_migrated`, and `04_sycl_migrated_optimized` versions of the program.
+   By default, this command sequence will build the `02_sycl_dpct_migrated`, `03_sycl_migrated` versions of the program.
 
 #### Troubleshooting
 
