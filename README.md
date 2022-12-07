@@ -11,12 +11,9 @@ The `concurrentKernels` sample demonstrates the use of SYCL queues for concurren
 
 ## Purpose
 
-Optical flow method is based on two assumptions: brightness constancy and spatial
-flow smoothness. These assumptions are combined in a single energy functional and
-solution is found as its minimum point. The sample includes
-both parallel and serial computation, which allows for direct results comparison. The parallel implementation demonstrates the use of Texture memory, shared memory, and cooperative groups. Input to the sample is two image frames and output is the absolute difference value(L1 error) between serial and parallel computation.
 
-This sample contains four versions in the following folders:
+
+This sample contains three versions in the following folders:
 
 | Folder Name                   | Description
 |:---                           |:---
@@ -34,9 +31,9 @@ This sample contains four versions in the following folders:
 
 ## Key Implementation Details
 
-HSOptical flow involves image downscaling and upscaling, image warping, computing derivatives, and computation of jacobi iteration.
+concurrentKernels involves a kernel that does no real work but runs atleast for a specified number of iterations.
 
->**Note**: This sample demonstrates the CUDA HSOptical Flow Estimation using key concepts such as Image processing, Texture memory, shared memory, and cooperative groups.
+>**Note**: This sample demonstrates the CUDA concurrentKernels using key concepts such as CUDA streams and Performance Strategies.
 
 
 ## Set Environment Variables
@@ -140,7 +137,7 @@ You can submit build and run jobs through a Portable Bash Script (PBS). A job is
 
 ### Example Output
 
-The following example is for `03_sycl_migrated` for GPU with inputs files **frame10.ppm** and **frame11.ppm** on **Intel(R) UHD Graphics P630 \[0x3e96\]**.
+The following example is for `03_sycl_migrated` on **Intel(R) UHD Graphics P630 \[0x3e96\]** for OpenCL Backend.
 ```
 HSOpticalFlow Starting...
 
