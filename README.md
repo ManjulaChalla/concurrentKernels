@@ -36,7 +36,7 @@ concurrentKernels involves a kernel that does no real work but runs atleast for 
 
 SYCL has two kinds of queues that a programmer can create and use to submit kernels for execution.
 
-The choice to create an in-order or out-of-order queue is made at queue construction time through the property sycl::property::queue::in_order(). By default, when no property is specified, the queue is out-of-order.
+The choice to create an in-order or out-of-order queue is made at queue construction time through the property sycl::property::queue::in_order().By default, when no property is specified, the queue is out-of-order.
 
 ## Set Environment Variables
 
@@ -141,17 +141,7 @@ You can submit build and run jobs through a Portable Bash Script (PBS). A job is
 
 The following example is for `03_sycl_migrated` on **Intel(R) UHD Graphics P630 \[0x3e96\]** for OpenCL Backend.
 ```
-HSOpticalFlow Starting...
 
-Loading "frame10.ppm" ...
-Loading "frame11.ppm" ...
-Computing optical flow on CPU...
-Computing optical flow on GPU...
-
-Running on Intel(R) UHD Graphics P630 [0x3e96]
-Processing time on CPU: 2800.426270 (ms)
-Processing time on GPU: 1203.821533 (ms)
-L1 error : 0.018189
 ```
 
 ## License
