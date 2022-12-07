@@ -1,4 +1,4 @@
-﻿# `concurrentkernels` Sample
+﻿# `concurrentKernels` Sample
 
 The `concurrentKernels` sample demonstrates the use of SYCL queues for concurrent execution of several kernels on GPU device.It is implemented using SYCL* by migrating code from original CUDA source code for offloading computations to a GPU/CPU and further demonstrates how to optimize and improve processing time.
 
