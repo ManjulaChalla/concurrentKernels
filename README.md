@@ -77,7 +77,7 @@ make VERBOSE=1
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
 
 
-## Run the `concurrentKernel` Sample
+## Run the `concurrentKernels` Sample
 
 ### On Linux
 
@@ -95,7 +95,7 @@ You can run the programs for CPU and GPU. The commands indicate the device targe
     make run_gpu
     ```
 
-### Build and Run the `concurrentKernel` Sample in Intel® DevCloud
+### Build and Run the `concurrentKernels` Sample in Intel® DevCloud
 
 When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
 
