@@ -34,6 +34,8 @@ concurrentKernels involves a kernel that does no real work but runs atleast for 
 
 >**Note**: This sample demonstrates the CUDA concurrentKernels using key concepts such as CUDA streams and Performance Strategies.
 
+SYCL has two kinds of queues that a programmer can create and use to submit kernels for execution.
+
 The choice to create an in-order or out-of-order queue is made at queue construction time through the property sycl::property::queue::in_order(). By default, when no property is specified, the queue is out-of-order.
 
 ## Set Environment Variables
