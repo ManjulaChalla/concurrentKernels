@@ -1,7 +1,7 @@
 {
   "guid": "B29DB886-B31C-45BA-9BC6-5698A9D090C2",	
-  "name": "MontecarloMultiGPU",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/MapReduce"],
+  "name": "concurrentKernels",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/"],
   "description": "Evaluates fair call price for a given set of European Options using the MonteCarlo approach",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
