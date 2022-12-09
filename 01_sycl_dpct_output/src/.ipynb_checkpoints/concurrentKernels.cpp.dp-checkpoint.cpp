@@ -33,28 +33,27 @@
 
 // Devices of compute capability 2.0 or higher can overlap the kernels
 //
-#include <CL/sycl.hpp>
-#include <dpct/dpct.hpp>
-#include <stdio.h>
-
 #include <helper_cuda.h>
 #include <helper_functions.h>
+#include <stdio.h>
+
+#include <CL/sycl.hpp>
 #include <chrono>
+#include <dpct/dpct.hpp>
 
 // This is a kernel that does no real work but runs at least for a specified
 // number of clocks
 void clock_block(clock_t *d_o, clock_t clock_count, sycl::nd_item<3> item_ct1) {
- // int i = 0;
+  // int i = 0;
   for (int i = item_ct1.get_local_id(2); i < 500000;
-       i += item_ct1.get_local_range(2))
-  {
-    d_o[0]=d_o[0]+i;
+       i += item_ct1.get_local_range(2)) {
+    d_o[0] = d_o[0] + i;
   }
-
 }
 
 // Single warp reduction kernel
-void sum(clock_t *d_clocks, int N, sycl::nd_item<3> item_ct1, clock_t *s_clocks) {
+void sum(clock_t *d_clocks, int N, sycl::nd_item<3> item_ct1,
+         clock_t *s_clocks) {
   // Handle to thread block group
   auto cta = item_ct1.get_group();
 
@@ -100,7 +99,7 @@ int main(int argc, char **argv) {
 
   // use command-line specified CUDA device, otherwise use device with highest
   // Gflops/s
- cuda_device = findCudaDevice(argc, (const char **)argv);
+  cuda_device = findCudaDevice(argc, (const char **)argv);
 
   dpct::device_info deviceProp;
   checkCudaErrors(cuda_device = dpct::dev_mgr::instance().current_device_id());

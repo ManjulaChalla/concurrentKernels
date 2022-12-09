@@ -33,28 +33,27 @@
 
 // Devices of compute capability 2.0 or higher can overlap the kernels
 //
-#include <CL/sycl.hpp>
-#include <stdio.h>
-
 #include <helper_cuda.h>
 #include <helper_functions.h>
+#include <stdio.h>
+
+#include <CL/sycl.hpp>
 #include <chrono>
 using namespace sycl;
 
 // This is a kernel that does no real work but runs at least for a specified
 // number of clocks
 void clock_block(clock_t *d_o, clock_t clock_count, sycl::nd_item<3> item_ct1) {
- // int i = 0;
+  // int i = 0;
   for (int i = item_ct1.get_local_id(2); i < 500000;
-       i += item_ct1.get_local_range(2))
-  {
-    d_o[0]=d_o[0]+i;
+       i += item_ct1.get_local_range(2)) {
+    d_o[0] = d_o[0] + i;
   }
-
 }
 
 // Single warp reduction kernel
-void sum(clock_t *d_clocks, int N, sycl::nd_item<3> item_ct1, clock_t *s_clocks) {
+void sum(clock_t *d_clocks, int N, sycl::nd_item<3> item_ct1,
+         clock_t *s_clocks) {
   // Handle to thread block group
   auto cta = item_ct1.get_group();
 
@@ -66,7 +65,7 @@ void sum(clock_t *d_clocks, int N, sycl::nd_item<3> item_ct1, clock_t *s_clocks)
   }
 
   s_clocks[item_ct1.get_local_id(2)] = my_sum;
-   item_ct1.barrier(); 
+  item_ct1.barrier();
 
   for (int i = 16; i > 0; i /= 2) {
     if (item_ct1.get_local_id(2) < i) {
@@ -81,7 +80,6 @@ void sum(clock_t *d_clocks, int N, sycl::nd_item<3> item_ct1, clock_t *s_clocks)
 }
 
 int main(int argc, char **argv) {
- 
   sycl::queue q_ct1 = sycl::queue(default_selector());
   int nkernels = 8;             // number of concurrent kernels
   int nstreams = nkernels + 1;  // use one more stream than concurrent kernel
@@ -97,19 +95,16 @@ int main(int argc, char **argv) {
     nkernels = getCmdLineArgumentInt(argc, (const char **)argv, "nkernels");
     nstreams = nkernels + 1;
   }
- auto exception_handler = [](exception_list exceptions) {
-
-        for (std::exception_ptr const& e : exceptions) {
-            try {
-                std::rethrow_exception(e);
-            }
-            catch (exception const& e) {
-                std::cout << "Caught asynchronous SYCL exception:\n"
-                          << e.what() << std::endl;
-            }
-        }
-    };
-
+  auto exception_handler = [](exception_list exceptions) {
+    for (std::exception_ptr const &e : exceptions) {
+      try {
+        std::rethrow_exception(e);
+      } catch (exception const &e) {
+        std::cout << "Caught asynchronous SYCL exception:\n"
+                  << e.what() << std::endl;
+      }
+    }
+  };
 
   // use command-line specified CUDA device, otherwise use device with highest
   // Gflops/s
@@ -117,7 +112,7 @@ int main(int argc, char **argv) {
             << q_ct1.get_device().get_info<sycl::info::device::name>()
             << std::endl;
 
-   std::cout << "> Detected Compute SM "
+  std::cout << "> Detected Compute SM "
             << q_ct1.get_device().get_info<sycl::info::device::version>()
             << " hardware with "
             << q_ct1.get_device()
@@ -126,12 +121,12 @@ int main(int argc, char **argv) {
 
   // allocate host memory
   clock_t *a = 0;  // pointer to the array data in host memory
-  
+
   a = (clock_t *)sycl::malloc_host(nbytes, q_ct1);
 
   // allocate device memory
   clock_t *d_a = 0;  // pointers to data and init value in the device memory
-  
+
   d_a = (clock_t *)sycl::malloc_device(nbytes, q_ct1);
 
   // allocate and initialize an array of stream handles
@@ -139,23 +134,21 @@ int main(int argc, char **argv) {
       (sycl::queue **)malloc(nstreams * sizeof(sycl::queue *));
 
   for (int i = 0; i < nstreams; i++) {
-     streams[i] = (sycl::queue *)malloc(nstreams * sizeof(sycl::queue));
-    *streams[i] =
-        sycl::queue(sycl::default_selector(),exception_handler);
+    streams[i] = (sycl::queue *)malloc(nstreams * sizeof(sycl::queue));
+    *streams[i] = sycl::queue(sycl::default_selector(), exception_handler);
   }
 
   // create CUDA event handles
   sycl::event start_event, stop_event;
   std::chrono::time_point<std::chrono::steady_clock> start_event_ct1;
   std::chrono::time_point<std::chrono::steady_clock> stop_event_ct1;
-  
+
   // the events are used for synchronization only and hence do not need to
   // record timings this also makes events not introduce global sync points when
   // recorded which is critical to get overlap
   sycl::event *kernelEvent;
   std::chrono::time_point<std::chrono::steady_clock> kernelEvent_ct1_i;
   kernelEvent = new sycl::event[nkernels];
-
 
   //////////////////////////////////////////////////////////////////////
   // time execution with nkernels streams
@@ -166,7 +159,9 @@ int main(int argc, char **argv) {
   clock_t time_clocks = (clock_t)(kernel_time * (deviceProp.clockRate / 100));
 #else
   clock_t time_clocks =
-      (clock_t)(kernel_time *q_ct1.get_device().get_info<sycl::info::device::max_clock_frequency>());
+      (clock_t)(kernel_time *
+                q_ct1.get_device()
+                    .get_info<sycl::info::device::max_clock_frequency>());
 #endif
 
   sycl::event stop_event_streams_nstreams_1;
@@ -189,9 +184,9 @@ int main(int argc, char **argv) {
     kernelEvent[i] = streams[i]->ext_oneapi_submit_barrier();
 
     // make the last stream wait for the kernel event to be recorded
-    
+
     kernelEvent[i] =
-             streams[nstreams - 1]->ext_oneapi_submit_barrier({kernelEvent[i]});
+        streams[nstreams - 1]->ext_oneapi_submit_barrier({kernelEvent[i]});
   }
   // queue a sum kernel and a copy back to host in the last stream.
   // the commands in this stream get dispatched as soon as all the kernel events
@@ -207,22 +202,23 @@ int main(int argc, char **argv) {
           sum(d_a, nkernels, item_ct1, s_clocks_acc_ct1.get_pointer());
         });
   });
-  
-  stop_event_streams_nstreams_1 = streams[nstreams - 1]->memcpy(a, d_a, sizeof(clock_t));
+
+  stop_event_streams_nstreams_1 =
+      streams[nstreams - 1]->memcpy(a, d_a, sizeof(clock_t));
 
   // at this point the CPU has dispatched all work for the GPU and can continue
   // processing other tasks in parallel
 
   // in this sample we just wait until the GPU is done
- 
+
   q_ct1.wait_and_throw();
   stop_event_streams_nstreams_1.wait();
   stop_event_ct1 = std::chrono::steady_clock::now();
   stop_event = q_ct1.ext_oneapi_submit_barrier();
-  
-  elapsed_time = std::chrono::duration<float, std::milli>(
-                                      stop_event_ct1 - start_event_ct1)
-                                      .count();
+
+  elapsed_time =
+      std::chrono::duration<float, std::milli>(stop_event_ct1 - start_event_ct1)
+          .count();
 
   printf("Expected time for serial execution of %d kernels = %.3fs\n", nkernels,
          nkernels * kernel_time / 1000.0f);
@@ -234,7 +230,7 @@ int main(int argc, char **argv) {
 
   // release resources
   for (int i = 0; i < nkernels; i++) {
-     free(streams[i]);
+    free(streams[i]);
   }
 
   free(streams);
